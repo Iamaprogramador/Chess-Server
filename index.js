@@ -1,4 +1,5 @@
 const express = require('express');
+const chess = require('./chess.js');
 const app = express();
 
 app.get('/game', (req, res) => {
@@ -45,19 +46,35 @@ function cloneArray(arr) {
 app.get('/game/new', (req, res) => {
     let gameId = nextGameId;
     if (gameStates[gameId] == 'waiting') {
-        res.redirect('/game?gameId=' + gameId + '&side=black');
+        res.redirect('/game?gameId=' + gameId + '&team=black');
         gameStates[gameId] = 'white';
         nextGameId++;
     }
     else {
         games[gameId] = cloneArray(gameBoard);
         gameStates[gameId] = 'waiting';
-        res.redirect('/game?gameId=' + gameId + '&side=white');
+        res.redirect('/game?gameId=' + gameId + '&team=white');
     }
 });
 
 app.get('/game/board', (req, res) => {
     res.json(games[req.query.gameId]);
+});
+
+app.get('/game/move', (req, res) => {
+    let gameId = req.query.gameId;
+    let team = req.query.team;
+    let x1 = req.query.x1,
+        x2 = req.query.x2,
+        y1 = req.query.y1,
+        y2 = req.query.y2;
+
+    let board = games[gameId];
+    if (board[x1][y1].includes(team) && gameStates[gameId] == team) {
+        res.json({
+            valid: chess.checkMove(board, x1, y1, )
+        });
+    }
 });
 
 app.listen(5000);

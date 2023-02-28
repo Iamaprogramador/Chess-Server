@@ -3,7 +3,7 @@ const $$ = (selector, node = document) => node.querySelectorAll(selector);
 
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get('gameId');
-const team = params.get('side');
+const team = params.get('team');
 
 var board = $("#board");
 
