@@ -1,0 +1,42 @@
+body {
+    text-align: center;
+    background-color:  #0df;
+}
+
+#board {
+    background-color: #FFF;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cell {
+    height: 30px;
+    width: 30px;
+    border: 1.5px solid grey;
+    border-style: inset;
+}
+
+.blackcell {
+    background-color: #964B00;
+}
+.blackcell hover {
+    background-color: #630;  
+}
+
+.whitecell {
+    background-color: white;
+}
+
+.whitecell hover {
+    background-color: #F1F1D8;
+}
+
+.cell img {
+    width: 28px;
+    height: 28px;
+    object-fit: fill;
+}
+
