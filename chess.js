@@ -1,6 +1,23 @@
+/*
+function inCheck(board, team) {
+  //Checks to see if team's king is in check or not
+  //get king loc at kx, ky
+  for piece in opponent pieces {
+    //get piece loc at px, py
+    if (check{ board[kx][ky].substring(6) }(board, px, py, kx, ky)){
+    return True;
+    }
+  }
+  return False;
+}
+
+
+*/
+
 function checkMove(board, x1, y1, x2, y2) {
     return true;
     let pieceId = board[x1][y1].substring(6);
+    //return && with inCheck(board, team) after moving the piece
     if (pieceId === 'pawn') return checkPawnMove(board, x1, y1, x2, y2);
     if (pieceId === 'rook') return checkRookMove(board, x1, y1, x2, y2);
     if (pieceId === 'knight') return checkKnightMove(board, x1, y1, x2, y2);
@@ -46,13 +63,19 @@ function checkRookMove(board, x1, y1, x2, y2) {
     if (x1 == x2) {
       let sy = (2 * ((y2 - y1) > 0))-1;
       for(let yi = 1; yi < Math.abs(y2 - y1); yi++) {
-        if (board[x1][y1 + sy * yi] != ''){return False;}
+        if (board[x1][y1 + sy * yi] != ''){
+          console.log('Rooks cannot jump')
+          return False;
+        }
       }
     }
     else {
       let sx = (2 * ((x2 - x1) > 0))-1;
       for(let xi = 1; xi < Math.abs(x2 - x1); xi++) {
-        if (board[x1 + sy * xi][y1] != ''){return False;}
+        if (board[x1 + sy * xi][y1] != ''){
+          console.log('Rooks cannot jump')
+          return False;
+        }
     }
   }
 }
@@ -77,7 +100,6 @@ function checkBishopMove(board, x1, y1, x2, y2) {
 
 function checkQueenMove(board, x1, y1, x2, y2) {
     return checkBishopMove(board, x1, y1, x2, y2) || checkRookMove(board, x1, y1, x2, y2);
-    //Queens won't be able to jump once the bishop and rook routines are fixed
 }
 
 function checkKingMove(board, x1, y1, x2, y2) {
