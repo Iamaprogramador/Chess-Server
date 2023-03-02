@@ -40,3 +40,6 @@ body {
     object-fit: fill;
 }
 
+.selected-cell {
+    background-color: #0df;
+}

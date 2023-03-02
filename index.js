@@ -6,12 +6,28 @@ app.get('/game', (req, res) => {
     res.sendFile(__dirname + '/client/index.html');
 });
 
-app.get('/script.js', (req, res) => {
+app.get('/game/script.js', (req, res) => {
     res.sendFile(__dirname + '/client/script.js');
 });
 
-app.get('/style.css', (req, res) => {
+app.get('/game/style.css', (req, res) => {
     res.sendFile(__dirname + '/client/style.css');
+});
+
+app.get('/', (req, res) => {
+    res.redirect('/home');
+});
+
+app.get('/home', (req, res) => {
+    res.sendFile(__dirname + '/home/index.html');
+});
+
+app.get('/home/script.js', (req, res) => {
+    res.sendFile(__dirname + '/home/script.js');
+});
+
+app.get('/home/style.css', (req, res) => {
+    res.sendFile(__dirname + '/home/style.css');
 });
 
 app.get('/assets/pieces/', (req, res) => {
@@ -69,12 +85,21 @@ app.get('/game/move', (req, res) => {
         y1 = req.query.y1,
         y2 = req.query.y2;
 
+    console.log(`[${gameId}:${team}] (${x1},${y1};${games[gameId][x1][y1]}) -> (${x2}, ${y2};${games[gameId][x2][y2]}) { ${gameStates[gameId]} }`);
+
     let board = games[gameId];
-    if (board[x1][y1].includes(team) && gameStates[gameId] == team) {
-        res.json({
-            valid: chess.checkMove(board, x1, y1, )
-        });
+    if (x1 == x2 && y1 == y2) res.json({ valid: false })
+    else if (board[x1][y1].includes(team) && gameStates[gameId] == team) {
+        let valid = chess.checkMove(board, x1, y1, x2, y2);
+        if (valid == true) {
+            board[x2][y2] = board[x1][y1];
+            board[x1][y1] = '';
+            if (gameStates[gameId] == 'white') gameStates[gameId] = 'black';
+            else gameStates[gameId] = 'white';
+        }
+        res.json({ valid });
     }
+    else res.json({ valid: false });
 });
 
 app.listen(5000);

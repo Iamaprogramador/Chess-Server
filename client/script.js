@@ -7,37 +7,42 @@ const team = params.get('team');
 
 var board = $("#board");
 
-function createCell(color, i, j) {
+function createCell(color, x, y) {
     let cell = document.createElement('td');
     cell.className = `cell ${color}cell`;
-    cell.id = `cell-${i}-${j}`;
+    cell.id = `cell-${x}-${y}`;
+    cell.onclick = () => select(x, y);
     return cell;
 }
 
-for (let i = 0; i < 8; i++) {
+for (let y = 0; y < 8; y++) {
     let row = document.createElement('tr');
-    for (let j = 0; j < 8; j++) {
-        if ((i + j) % 2 == 0) row.appendChild(createCell('white', i, j));
-        else row.appendChild(createCell('black', i, j));
+    for (let x = 0; x < 8; x++) {
+        if ((x + y) % 2 == 0) row.appendChild(createCell('white', x, y));
+        else row.appendChild(createCell('black', x, y));
     }
     board.appendChild(row);
 }
 
 function renderPiece(pieceId, x, y) {
-    if (pieceId.length == 0) return;
+    let tc = $(`#cell-${x}-${y}`, board);
     
+    if (pieceId.length == 0) { tc.innerHTML = ''; return;}
+    if (tc.lastChild?.src == 'https://chess-server.iamaprogramador.repl.co/assets/pieces?piece=' + pieceId) return;
+
     let piece = document.createElement('img');
     piece.width = 30;
     piece.height = 30;
     piece.src = '/assets/pieces?piece=' + pieceId;
-    
-    $(`#cell-${x}-${y}`, board).appendChild(piece);
+
+    tc.innerHTML = '';
+    tc.appendChild(piece);
 }
 
 function render(pieces) {
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++)
-            renderPiece(pieces[i][j], team == 'white' ? i : 7 - i, j);
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++)
+            renderPiece(pieces[y][x], x, team == 'white' ? y : 7 - y);
     }
 }
 
@@ -48,3 +53,32 @@ function updatePieces() {
 }
 
 updatePieces();
+
+var selectedX = -1, selectedY;
+
+function select(x, y) {
+    if (selectedX == -1) {
+        console.log(`(${x}, ${y}) -> (?, ?)`);
+        selectedX = x;
+        selectedY = y;
+        $(`#cell-${selectedX}-${selectedY}`, board).classList.toggle('selected-cell');
+    }
+    else {
+        console.log(`(${selectedX}, ${selectedY}) -> (${x}, ${y})`);
+        $(`#cell-${selectedX}-${selectedY}`, board).classList.toggle('selected-cell');
+        let params = new URLSearchParams();
+        params.set('gameId', gameId);
+        params.set('team', team);
+        params.set('x1', team == 'black' ? 7 - selectedX : selectedX);
+        params.set('y1', selectedY);
+        params.set('x2', team == 'black' ? 7 - x : x);
+        params.set('y2', y);
+        fetch("https://chess-server.iamaprogramador.repl.co/game/move?" + params.toString())
+            .then(res => res.json())
+            .then(data => data.valid == true ? updatePieces() : undefined);
+
+        selectedX = -1;
+    }
+}
+
+setInterval(updatePieces, 100);
