@@ -9,5 +9,6 @@ View this site at <a href="https://Chess-Server.iamaprogramador.repl.co">Iamapro
 Do not attempt to play chess here yet, it is currently being tested.
 Expected time of first beta release is April 2022.</p>
 
-If you wish to contribute, shoot me <a href="mailto:iamaprogramador@gmail.com">an email</a>.
+
+If you like this project, please star it, and you wish to contribute, shoot me <a href="mailto:iamaprogramador@gmail.com">an email</a>.
 Thanks for looking at this!
