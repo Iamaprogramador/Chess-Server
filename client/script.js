@@ -26,8 +26,8 @@ for (let y = 0; y < 8; y++) {
 
 function renderPiece(pieceId, x, y) {
     let tc = $(`#cell-${x}-${y}`, board);
-    
-    if (pieceId.length == 0) { tc.innerHTML = ''; return;}
+
+    if (pieceId.length == 0) { tc.innerHTML = ''; return; }
     if (tc.lastChild?.src == 'https://chess-server.iamaprogramador.repl.co/assets/pieces?piece=' + pieceId) return;
 
     let piece = document.createElement('img');
@@ -40,9 +40,9 @@ function renderPiece(pieceId, x, y) {
 }
 
 function render(pieces) {
-    for (let y = 0; y < 8; y++) {
-        for (let x = 0; x < 8; x++)
-            renderPiece(pieces[y][x], x, team == 'white' ? y : 7 - y);
+    for (let x = 0; x < 8; x++) {
+        for (let y = 0; y < 8; y++)
+            renderPiece(pieces[x][y], x, team == 'white' ? y : 7 - y);
     }
 }
 
@@ -69,10 +69,10 @@ function select(x, y) {
         let params = new URLSearchParams();
         params.set('gameId', gameId);
         params.set('team', team);
-        params.set('x1', team == 'black' ? 7 - selectedX : selectedX);
-        params.set('y1', selectedY);
-        params.set('x2', team == 'black' ? 7 - x : x);
-        params.set('y2', y);
+        params.set('x1', selectedX);
+        params.set('y1', team == 'black' ? 7 - selectedY : selectedY);
+        params.set('x2', x);
+        params.set('y2', team == 'black' ? 7 - y : y);
         fetch("https://chess-server.iamaprogramador.repl.co/game/move?" + params.toString())
             .then(res => res.json())
             .then(data => data.valid == true ? updatePieces() : undefined);
